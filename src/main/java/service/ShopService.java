@@ -37,10 +37,18 @@ public class ShopService {
 
 
     public List<Order> getAllOrdersByStatus(OrderStatus orderStatus){
+        // ToDo: Coding: Order Status
         return orderRepo.getOrders().stream()
                 .filter(order -> order.status().equals(orderStatus))
                 .collect(Collectors.toList());
-        // ToDo: Coding: Order Status
+    }
+
+    public void setOrderStatusProcessingToDelivered() {
+        // ToDo: Coding: Lombok
+        List<Order> orders = getAllOrdersByStatus(OrderStatus.PROCESSING);
+        for (Order order : orders) {
+            orderRepo.addOrder(order.withStatus(OrderStatus.DELIVERED));
+        }
     }
 
     // #############################################################################################

@@ -28,6 +28,8 @@ public class Main {
                 case 4 -> placeOrder();
                 case 5 -> exit = true;
                 case 6 -> listOrdersByStatus();
+                case 7 -> shopService.setOrderStatusProcessingToDelivered();
+                case 8 -> listOrdersByDelivered();
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         }
@@ -42,6 +44,8 @@ public class Main {
         System.out.println("4. Place Order");
         System.out.println("5. Exit");
         System.out.println("6. List Orders by Status 'Processing'");
+        System.out.println("7. Set Order Status 'Processing' to 'Delivered'");
+        System.out.println("8. List Orders by Status 'Delivered'");
         System.out.print("Enter your choice: ");
     }
 
@@ -81,6 +85,12 @@ public class Main {
         // ToDo: Clean implementation needed
     }
 
+    private static void listOrdersByDelivered() {
+        System.out.println("\n=== Delivered ===");
+        shopService.getAllOrdersByStatus(OrderStatus.DELIVERED).forEach(Main::listOrdersFormatted);
+        // ToDo: Clean implementation needed
+    }
+
     private static void listOrdersFormatted(Order order){
         System.out.println("Order ID: " + order.id());
         order.products().forEach(product -> System.out.println(product.id() + ": " + product.name() + " - $" + product.price()));
@@ -103,8 +113,21 @@ public class Main {
         }
     }
 
+    private static void setupTestData() {
+        // ToDo: Bonus Setting in Main Repo
+        List<String> productIdList1 = Arrays.asList("1", "2", "3");
+        List<String> productIdList2 = Arrays.asList("11", "22", "33");
+        List<String> productIdList3 = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+        shopService.addOrder(productIdList1);
+        shopService.addOrder(productIdList2);
+        shopService.addOrder(productIdList3);
+    }
+
     public static void main(String[] args) {
         shopService.addProductsFromCsv("src/main/resources/products.csv");
+        setupTestData();
         start();
     }
+
+
 }
