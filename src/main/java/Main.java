@@ -72,23 +72,20 @@ public class Main {
 
     private static void listOrders() {
         System.out.println("\n=== Orders ===");
-        shopService.getAllOrders().forEach(order ->{
-            System.out.println(order.id());
-            order.products().forEach(product -> {
-                System.out.println(product.id() + ": " + product.name() + " - $" + product.price());
-            });
-        System.out.println("Total: $" + order.total());
-        });
+        shopService.getAllOrders().forEach(Main::listOrdersFormatted);
     }
 
     private static void listOrdersByStatus() {
         System.out.println("\n=== Processing ===");
-        shopService.getAllOrdersByStatus(OrderStatus.PROCESSING).forEach(order ->{
-                    System.out.println(order.id());
-                    order.products().forEach(product -> System.out.println(product.id() + ": " + product.name() + " - $" + product.price()));
-                    System.out.println("Total: $" + order.total());
-                });
+        shopService.getAllOrdersByStatus(OrderStatus.PROCESSING).forEach(Main::listOrdersFormatted);
         // ToDo: Clean implementation needed
+    }
+
+    private static void listOrdersFormatted(Order order){
+        System.out.println("Order ID: " + order.id());
+        order.products().forEach(product -> System.out.println(product.id() + ": " + product.name() + " - $" + product.price()));
+        System.out.println("Total: $" + order.total());
+        System.out.println();
     }
 
     private static void placeOrder() {
