@@ -67,8 +67,13 @@ public class Main {
 
     private static void listOrders() {
         System.out.println("\n=== Orders ===");
-        shopService.getAllOrders().forEach(order ->
-                System.out.println(order.id() + ": Total $" + order.total()));
+        shopService.getAllOrders().forEach(order ->{
+            System.out.println(order.id());
+            order.products().forEach(product -> {
+                System.out.println(product.id() + ": " + product.name() + " - $" + product.price());
+            });
+        System.out.println("Total: $" + order.total());
+        });
     }
 
     private static void placeOrder() {
