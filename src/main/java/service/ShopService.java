@@ -8,6 +8,8 @@ import product.Product;
 import product.ProductRepo;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -80,7 +82,7 @@ public class ShopService {
 
         final BigDecimal totalPrice = calculateTotalPrice(productIds);
         final String orderId = idService.generateId();
-        final Order newOrder = new Order(orderId, products, totalPrice, OrderStatus.PROCESSING);
+        final Order newOrder = new Order(orderId, products, totalPrice, OrderStatus.PROCESSING, Instant.now());
 
         return orderRepo.addOrder(newOrder);
     }
