@@ -1,9 +1,6 @@
 package product;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ProductRepo {
     private final Map<String, Product> products;
@@ -16,13 +13,8 @@ public class ProductRepo {
         return new ArrayList<>(products.values());
     }
 
-    public Product getProductById(String id) {
-        for (Product product : products.values()) {
-            if (product.id().equals(id)) {
-                return product;
-            }
-        }
-        return null;
+    public Optional<Product> getProductById(String id) {
+        return Optional.ofNullable(products.get(id));
     }
 
     public Product addProduct(Product newProduct) {
