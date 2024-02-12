@@ -85,11 +85,10 @@ public class Main {
         System.out.println("\n=== Processing ===");
         shopService.getAllOrdersByStatus(OrderStatus.PROCESSING).forEach(order ->{
                     System.out.println(order.id());
-                    order.products().forEach(product -> {
-                        System.out.println(product.id() + ": " + product.name() + " - $" + product.price());
-                    });
+                    order.products().forEach(product -> System.out.println(product.id() + ": " + product.name() + " - $" + product.price()));
                     System.out.println("Total: $" + order.total());
                 });
+        // ToDo: Clean implementation needed
     }
 
     private static void placeOrder() {
