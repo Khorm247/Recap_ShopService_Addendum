@@ -116,7 +116,6 @@ public class ShopService {
     private void reduceProductStock(String productId) {
         Optional<Product> product = getProduct(productId);
         if(product.isPresent()){
-            // ToDo: why the f... should Product be a Record?!?
             Product actualProduct = product.get();
             Product updatedProduct = new Product(actualProduct.id(), actualProduct.name(), actualProduct.price(), actualProduct.stock() - 1);
             productRepo.addProduct(updatedProduct);
