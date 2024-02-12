@@ -10,6 +10,7 @@ import product.ProductRepo;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ShopService {
@@ -23,7 +24,7 @@ public class ShopService {
     public List<Product> getProducts() {
         return productRepo.getProducts();
     }
-    public Product getProduct(String id) {
+    public Optional<Product> getProduct(String id) {
         return productRepo.getProductById(id);
     }
     public Order getOrder(String id) {
@@ -86,7 +87,8 @@ public class ShopService {
 
     // PRODUCT METHODS
     private boolean isProductAvailable(String productId) {
-        return getProduct(productId).stock() > 0;
+        // ToDo: Tests needed here
+        return getProduct(productId).filter(value -> value.stock() > 0).isPresent();
     }
     private boolean verifyAndReduceProductStock(List<String> productIds) {
         for (String productId : productIds) {
@@ -102,9 +104,9 @@ public class ShopService {
         final List<Product> products = new ArrayList<>();
 
         for (String productId : productIds) {
-            Product product = getProduct(productId);
-            if (product != null) {
-                products.add(product);
+            Optional<Product> product = getProduct(productId);
+            if (product.isPresent()) {
+                products.add(product.get());
             } else {
                 System.out.println("Product with id " + productId + " not found");
             }
@@ -112,9 +114,13 @@ public class ShopService {
         return products;
     }
     private void reduceProductStock(String productId) {
-        Product product = getProduct(productId);
-        Product updatedProduct = new Product(product.id(), product.name(), product.price(), product.stock() - 1);
-        productRepo.addProduct(updatedProduct);
+        Optional<Product> product = getProduct(productId);
+        if(product.isPresent()){
+            // ToDo: why the f... should Product be a Record?!?
+            Product actualProduct = product.get();
+            Product updatedProduct = new Product(actualProduct.id(), actualProduct.name(), actualProduct.price(), actualProduct.stock() - 1);
+            productRepo.addProduct(updatedProduct);
+        }
     }
 
     // ORDER METHODS
