@@ -94,6 +94,7 @@ public class Main {
     private static void listOrdersFormatted(Order order){
         System.out.println("Order ID: " + order.id());
         System.out.println("Order Date: " + order.orderDate());
+        System.out.println("Status: " + order.status());
         order.products().forEach(product -> System.out.println(product.id() + ": " + product.name() + " - $" + product.price()));
         System.out.println("Total: $" + order.total());
         System.out.println();
