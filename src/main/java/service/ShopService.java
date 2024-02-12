@@ -10,6 +10,7 @@ import product.ProductRepo;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShopService {
 
@@ -30,6 +31,17 @@ public class ShopService {
     }
     public List<Order> getAllOrders() {
         return orderRepo.getOrders();
+    }
+
+    /*
+    Coding: Order Status
+    Write a method in the ShopService that returns a list of all orders with a specific order status (parameter) using streams.
+    ToDo: remove this comment after Project Presentation
+     */
+    public List<Order> getAllOrdersByStatus(OrderStatus orderStatus){
+        return orderRepo.getOrders().stream()
+                .filter(order -> order.status().equals(orderStatus))
+                .collect(Collectors.toList());
     }
 
     // #############################################################################################

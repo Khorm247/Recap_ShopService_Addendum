@@ -1,4 +1,5 @@
 import order.Order;
+import order.OrderStatus;
 import product.Product;
 import service.IdService;
 import service.ShopService;
@@ -26,6 +27,7 @@ public class Main {
                 case 3 -> listOrders();
                 case 4 -> placeOrder();
                 case 5 -> exit = true;
+                case 6 -> listOrdersByStatus();
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         }
@@ -39,6 +41,7 @@ public class Main {
         System.out.println("3. List Orders");
         System.out.println("4. Place Order");
         System.out.println("5. Exit");
+        System.out.println("6. List Orders by Status 'Processing'");
         System.out.print("Enter your choice: ");
     }
 
@@ -47,6 +50,8 @@ public class Main {
         shopService.getProducts().forEach(product ->
                 System.out.println(product.id() + ": " + product.name() + " - $" + product.price() + " (Stock: " + product.stock() + ")"));
     }
+
+
 
     private static void addProduct() {
         System.out.println("\n=== Add Product ===");
@@ -67,13 +72,20 @@ public class Main {
 
     private static void listOrders() {
         System.out.println("\n=== Orders ===");
-        shopService.getAllOrders().forEach(order ->{
-            System.out.println(order.id());
-            order.products().forEach(product -> {
-                System.out.println(product.id() + ": " + product.name() + " - $" + product.price());
-            });
+        shopService.getAllOrders().forEach(Main::listOrdersFormatted);
+    }
+
+    private static void listOrdersByStatus() {
+        System.out.println("\n=== Processing ===");
+        shopService.getAllOrdersByStatus(OrderStatus.PROCESSING).forEach(Main::listOrdersFormatted);
+        // ToDo: Clean implementation needed
+    }
+
+    private static void listOrdersFormatted(Order order){
+        System.out.println("Order ID: " + order.id());
+        order.products().forEach(product -> System.out.println(product.id() + ": " + product.name() + " - $" + product.price()));
         System.out.println("Total: $" + order.total());
-        });
+        System.out.println();
     }
 
     private static void placeOrder() {
