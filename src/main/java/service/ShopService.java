@@ -10,6 +10,7 @@ import product.ProductRepo;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,15 +35,20 @@ public class ShopService {
         return orderRepo.getOrders();
     }
 
-    /*
-    Coding: Order Status
-    Write a method in the ShopService that returns a list of all orders with a specific order status (parameter) using streams.
-    ToDo: remove this comment after Project Presentation
-     */
+
     public List<Order> getAllOrdersByStatus(OrderStatus orderStatus){
+        // ToDo: Coding: Order Status
         return orderRepo.getOrders().stream()
                 .filter(order -> order.status().equals(orderStatus))
                 .collect(Collectors.toList());
+    }
+
+    public void setOrderStatusProcessingToDelivered() {
+        // ToDo: Coding: Lombok
+        List<Order> orders = getAllOrdersByStatus(OrderStatus.PROCESSING);
+        for (Order order : orders) {
+            orderRepo.addOrder(order.withStatus(OrderStatus.DELIVERED));
+        }
     }
 
     // #############################################################################################
@@ -57,7 +63,18 @@ public class ShopService {
         productRepo.addProducts(newProducts);
     }
     public Order addOrder(List<String> productIds) {
-        if (verifyAndReduceProductStock(productIds)) return null;
+
+        // ToDo: Coding: Exceptions
+        //  Modify the 'addOrder' method in the ShopService
+        //  so that an exception is thrown if the product does not exist.
+        try{
+            if (verifyAndReduceProductStock(productIds))
+                throw new NoSuchElementException("product does not exist");
+        } catch (NoSuchElementException e){
+            System.out.println("Product does not exist");
+            e.printStackTrace();
+        }
+
 
         List<Product> products = retrieveProducts(productIds);
 
@@ -116,7 +133,6 @@ public class ShopService {
     private void reduceProductStock(String productId) {
         Optional<Product> product = getProduct(productId);
         if(product.isPresent()){
-            // ToDo: why the f... should Product be a Record?!?
             Product actualProduct = product.get();
             Product updatedProduct = new Product(actualProduct.id(), actualProduct.name(), actualProduct.price(), actualProduct.stock() - 1);
             productRepo.addProduct(updatedProduct);
