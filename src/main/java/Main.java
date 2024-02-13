@@ -1,7 +1,6 @@
 import order.Order;
 import order.OrderStatus;
 import product.Product;
-import service.IdService;
 import service.ShopService;
 
 import java.math.BigDecimal;
@@ -10,9 +9,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    private static final ShopService shopService = new ShopService();
     private static final Scanner scanner = new Scanner(System.in);
-    private static final IdService idService = new IdService();
+    private static final ShopService shopService = new ShopService();
 
     public static void start() {
         boolean exit = false;
@@ -67,7 +65,7 @@ public class Main {
         int stock = scanner.nextInt();
         scanner.nextLine(); // Consume newline
 
-        final String productId = idService.generateId();
+        final String productId = shopService.getNewGeneratedId();
         Product newProduct = new Product(productId, name, BigDecimal.valueOf(price), stock);
         Product addedProduct = shopService.addProduct(newProduct);
         System.out.println("Product added successfully.");

@@ -6,22 +6,21 @@ import order.OrderRepo;
 import order.OrderStatus;
 import product.Product;
 import product.ProductRepo;
-
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
 public class ShopService {
 
     // Fields
     private final ProductRepo productRepo = new ProductRepo();
     private final OrderRepo orderRepo = new OrderMapRepo();
-    private final IdService idService = new IdService();
+    private static final IdService idService = new IdService();
 
     // Getters
     public List<Product> getProducts() {
@@ -35,6 +34,9 @@ public class ShopService {
     }
     public List<Order> getAllOrders() {
         return orderRepo.getOrders();
+    }
+    public String getNewGeneratedId() {
+        return idService.generateId();
     }
 
 
