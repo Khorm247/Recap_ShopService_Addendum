@@ -1,18 +1,18 @@
 import order.Order;
 import order.OrderStatus;
+import org.w3c.dom.ls.LSOutput;
 import product.Product;
-import service.IdService;
 import service.ShopService;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
-    private static final ShopService shopService = new ShopService();
     private static final Scanner scanner = new Scanner(System.in);
-    private static final IdService idService = new IdService();
+    private static final ShopService shopService = new ShopService();
 
     public static void start() {
         boolean exit = false;
@@ -30,11 +30,14 @@ public class Main {
                 case 6 -> listOrdersByStatus();
                 case 7 -> shopService.setOrderStatusProcessingToDelivered();
                 case 8 -> listOrdersByDelivered();
+                case 9 -> setupTestData();
+                case 10 -> printOldestOrderMap();
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         }
         scanner.close();
     }
+
 
     private static void printMainMenu() {
         System.out.println("\n=== Shop Management System ===");
@@ -46,6 +49,8 @@ public class Main {
         System.out.println("6. List Orders by Status 'Processing'");
         System.out.println("7. Set Order Status 'Processing' to 'Delivered'");
         System.out.println("8. List Orders by Status 'Delivered'");
+        System.out.println("9. Add 3 Orders");
+        System.out.println("10. get oldest Orders by Status 'Processing'");
         System.out.print("Enter your choice: ");
     }
 
@@ -67,7 +72,7 @@ public class Main {
         int stock = scanner.nextInt();
         scanner.nextLine(); // Consume newline
 
-        final String productId = idService.generateId();
+        final String productId = shopService.getNewGeneratedId();
         Product newProduct = new Product(productId, name, BigDecimal.valueOf(price), stock);
         Product addedProduct = shopService.addProduct(newProduct);
         System.out.println("Product added successfully.");
@@ -89,6 +94,10 @@ public class Main {
         System.out.println("\n=== Delivered ===");
         shopService.getAllOrdersByStatus(OrderStatus.DELIVERED).forEach(Main::listOrdersFormatted);
         // ToDo: Clean implementation needed
+    }
+    private static void printOldestOrderMap() {
+        Map<String, Order> oldestOrders = shopService.getOldestOrderPerStatus(OrderStatus.PROCESSING);
+        oldestOrders.values().forEach(v -> System.out.println(v.orderDate()));
     }
 
     private static void listOrdersFormatted(Order order){
@@ -119,10 +128,10 @@ public class Main {
         // ToDo: Bonus Setting in Main Repo
         List<String> productIdList1 = Arrays.asList("1", "2", "3");
         List<String> productIdList2 = Arrays.asList("11", "22", "33");
-        List<String> productIdList3 = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+        //List<String> productIdList3 = Arrays.asList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
         shopService.addOrder(productIdList1);
         shopService.addOrder(productIdList2);
-        shopService.addOrder(productIdList3);
+        //shopService.addOrder(productIdList3);
     }
 
     public static void main(String[] args) {

@@ -6,14 +6,9 @@ import order.OrderRepo;
 import order.OrderStatus;
 import product.Product;
 import product.ProductRepo;
-
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ShopService {
@@ -21,7 +16,7 @@ public class ShopService {
     // Fields
     private final ProductRepo productRepo = new ProductRepo();
     private final OrderRepo orderRepo = new OrderMapRepo();
-    private final IdService idService = new IdService();
+    private static final IdService idService = new IdService();
 
     // Getters
     public List<Product> getProducts() {
@@ -35,6 +30,21 @@ public class ShopService {
     }
     public List<Order> getAllOrders() {
         return orderRepo.getOrders();
+    }
+
+    public Map<String, Order> getOldestOrderPerStatus(OrderStatus orderStatus) {
+        List<Order> oldestOrderPerStatus = orderRepo.getOrders().stream()
+                .filter(order -> order.status().equals(orderStatus))
+                .sorted(Comparator.comparing(Order::orderDate))
+                .peek(order -> System.out.println(order.orderDate()))   // ToDo: debugging, remove this later
+                .toList();
+
+        return oldestOrderPerStatus.stream()
+                .collect(Collectors.toMap(order -> String.valueOf(oldestOrderPerStatus.indexOf(order)), order -> order));
+    }
+
+    public String getNewGeneratedId() {
+        return idService.generateId();
     }
 
 
